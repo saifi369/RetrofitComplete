@@ -5,9 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.saifi369.retrofitcomplete.model.Comment;
 import com.saifi369.retrofitcomplete.model.Post;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,6 +18,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private TextView mLog;
+    MyWebService mWebService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +26,58 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initViews();
+        mWebService = MyWebService.retrofit.create(MyWebService.class);
 
     }
 
     public void runCode(View view){
 
-        MyWebService myWebService=MyWebService.retrofit.create(MyWebService.class);
 
-        Call<List<Post>> call=myWebService.getPosts();
+//        getPosts();
+        getComments();
+
+    }
+
+    private void getComments() {
+
+        Map<String,String> parameters=new HashMap<>();
+
+        parameters.put("postId","5");
+        parameters.put("_sort","email");
+        parameters.put("_order","asc");
+
+        Call<List<Comment>> call=mWebService.getComments("https://jsonplaceholder.typicode.com/posts/13/comments");
+
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                if(response.isSuccessful())
+                    showComments(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void showComments(List<Comment> body) {
+
+        for (Comment comment:body){
+
+            mLog.append("id: "+comment.getId()+"\n");
+            mLog.append("postId: "+comment.getPostId()+"\n");
+            mLog.append("user: "+comment.getName()+"\n");
+            mLog.append("email: "+comment.getEmail()+"\n");
+            mLog.append("body: "+comment.getBody()+"\n");
+        }
+
+    }
+
+    private void getPosts() {
+        Call<List<Post>> call= mWebService.getPosts();
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
@@ -50,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void showPost(Post post) {

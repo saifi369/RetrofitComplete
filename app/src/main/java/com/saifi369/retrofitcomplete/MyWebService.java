@@ -1,27 +1,53 @@
 package com.saifi369.retrofitcomplete;
 
+import com.saifi369.retrofitcomplete.model.Comment;
 import com.saifi369.retrofitcomplete.model.Post;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 public interface MyWebService {
 
     String BASE_URL="https://jsonplaceholder.typicode.com/";
     String FEED="posts";
 
+
+
     Retrofit retrofit=new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
+    //get list of posts
     @GET(FEED)
     Call<List<Post>> getPosts();
+
+    //dynamic url parameters with path
+    @GET("posts/{id}/comments")
+    Call<List<Comment>> getComments(@Path("id") int userId);
+
+    //query parameters
+    @GET("comments")
+    Call<List<Comment>> getComments(@QueryMap Map<String,String> params);
+
+    //query map(query parameters in map)
+    @GET("comments")
+    Call<List<Comment>> getComments(@Query("postId") Integer postid,
+                                    @Query("_sort") String sortBy,
+                                    @Query("_order") String orderBy);
+
+    //using url
+    @GET()
+    Call<List<Comment>> getComments(@Url String url);
 
 
 }
