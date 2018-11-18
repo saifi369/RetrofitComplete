@@ -41,12 +41,13 @@ public interface MyWebService {
 
     //query map(query parameters in map)
     @GET("comments")
-    Call<List<Comment>> getComments(@Query("postId") Integer postid,
+    Call<List<Comment>> getComments(@Query("postId") Integer[] ids,
                                     @Query("_sort") String sortBy,
-                                    @Query("_order") String orderBy);
+                                    @Query("_order") String orderBy
+                                    );
 
     //using url
-    @GET()
+    @GET
     Call<List<Comment>> getComments(@Url String url);
 
 

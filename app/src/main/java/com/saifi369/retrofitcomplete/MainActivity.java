@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         parameters.put("_sort","email");
         parameters.put("_order","asc");
 
-        Call<List<Comment>> call=mWebService.getComments("https://jsonplaceholder.typicode.com/posts/13/comments");
+        Call<List<Comment>> call=mWebService.getComments(new Integer[]{2},null,null);
 
         call.enqueue(new Callback<List<Comment>>() {
             @Override
