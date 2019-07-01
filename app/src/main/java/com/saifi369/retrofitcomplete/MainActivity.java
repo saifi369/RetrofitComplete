@@ -34,7 +34,35 @@ public class MainActivity extends AppCompatActivity {
 
 
 //        getPosts();
-        getComments();
+//        getComments();
+        createPost();
+
+    }
+
+    private void createPost() {
+        Post post = new Post(1, "Post Title", "this is post body");
+        Map<String, String> postMap = new HashMap<>();
+
+        postMap.put("userId", "33");
+        postMap.put("title", "My Post Title");
+        postMap.put("body", "this is my post body in the map");
+
+        Call<Post> postCall = mWebService.createPost(postMap);
+
+        postCall.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    mLog.setText(String.valueOf(response.code()));
+                    showPost(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
 
     }
 
@@ -101,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPost(Post post) {
-        mLog.append("userId: "+post.getUserId()+"\n");
+        mLog.append("\nuserId: " + post.getUserId() + "\n");
         mLog.append("id: "+post.getId()+"\n");
         mLog.append("title: "+post.getTitle()+"\n");
         mLog.append("body: "+post.getText()+"\n\n");
