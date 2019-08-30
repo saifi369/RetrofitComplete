@@ -30,12 +30,56 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void runCode(View view){
+    public void runCode(View view) {
 
 
 //        getPosts();
 //        getComments();
-        createPost();
+//        createPost();
+//        updatePost();
+        deletePost();
+    }
+
+    private void deletePost() {
+
+        Call<Void> call = mWebService.deletePost(5);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful())
+                    mLog.setText(String.valueOf(response.code()));
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+
+            }
+        });
+
+
+    }
+
+    private void updatePost() {
+
+        Post post = new Post(15, "New Title", null);
+
+        Call<Post> postCall = mWebService.patchPost(5, post);
+
+        postCall.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    mLog.setText(String.valueOf(response.code()));
+                    showPost(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable throwable) {
+
+            }
+        });
 
     }
 
@@ -68,18 +112,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void getComments() {
 
-        Map<String,String> parameters=new HashMap<>();
+        Map<String, String> parameters = new HashMap<>();
 
-        parameters.put("postId","5");
-        parameters.put("_sort","email");
-        parameters.put("_order","asc");
+        parameters.put("postId", "5");
+        parameters.put("_sort", "email");
+        parameters.put("_order", "asc");
 
-        Call<List<Comment>> call=mWebService.getComments(new Integer[]{2},null,null);
+        Call<List<Comment>> call = mWebService.getComments(new Integer[]{2}, null, null);
 
         call.enqueue(new Callback<List<Comment>>() {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
-                if(response.isSuccessful())
+                if (response.isSuccessful())
                     showComments(response.body());
             }
 
@@ -93,27 +137,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void showComments(List<Comment> body) {
 
-        for (Comment comment:body){
+        for (Comment comment : body) {
 
-            mLog.append("id: "+comment.getId()+"\n");
-            mLog.append("postId: "+comment.getPostId()+"\n");
-            mLog.append("user: "+comment.getName()+"\n");
-            mLog.append("email: "+comment.getEmail()+"\n");
-            mLog.append("body: "+comment.getBody()+"\n");
+            mLog.append("id: " + comment.getId() + "\n");
+            mLog.append("postId: " + comment.getPostId() + "\n");
+            mLog.append("user: " + comment.getName() + "\n");
+            mLog.append("email: " + comment.getEmail() + "\n");
+            mLog.append("body: " + comment.getBody() + "\n");
         }
 
     }
 
     private void getPosts() {
-        Call<List<Post>> call= mWebService.getPosts();
+        Call<List<Post>> call = mWebService.getPosts();
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
 
-                if(response.isSuccessful())
-                {
-                    for (Post post:response.body()) {
+                if (response.isSuccessful()) {
+                    for (Post post : response.body()) {
                         showPost(post);
                     }
 
@@ -130,9 +173,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showPost(Post post) {
         mLog.append("\nuserId: " + post.getUserId() + "\n");
-        mLog.append("id: "+post.getId()+"\n");
-        mLog.append("title: "+post.getTitle()+"\n");
-        mLog.append("body: "+post.getText()+"\n\n");
+        mLog.append("id: " + post.getId() + "\n");
+        mLog.append("title: " + post.getTitle() + "\n");
+        mLog.append("body: " + post.getText() + "\n\n");
     }
 
     public void clearOutput(View view) {
@@ -141,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mLog=findViewById(R.id.output_text);
+        mLog = findViewById(R.id.output_text);
     }
 
 }
