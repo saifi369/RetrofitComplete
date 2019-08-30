@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -25,13 +23,7 @@ import retrofit2.http.Url;
 
 public interface MyWebService {
 
-    String BASE_URL = "https://jsonplaceholder.typicode.com/";
     String FEED = "posts";
-
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build();
 
     //get list of posts
     @GET(FEED)

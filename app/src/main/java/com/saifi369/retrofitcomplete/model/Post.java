@@ -6,7 +6,7 @@ public class Post {
 
     private int userId;
 
-    private int id;
+    private Integer id;
 
     private String title;
 
@@ -27,7 +27,7 @@ public class Post {
         this.userId = userId;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

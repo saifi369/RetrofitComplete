@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.saifi369.retrofitcomplete.model.Comment;
 import com.saifi369.retrofitcomplete.model.Post;
+import com.saifi369.retrofitcomplete.network.NetworkHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initViews();
-        mWebService = MyWebService.retrofit.create(MyWebService.class);
+        mWebService = NetworkHelper.getRetrofit().create(MyWebService.class);
 
     }
 
@@ -36,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
 //        getPosts();
 //        getComments();
 //        createPost();
-//        updatePost();
-        deletePost();
+        updatePost();
+//        deletePost();
     }
 
     private void deletePost() {
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         Post post = new Post(15, "New Title", null);
 
-        Call<Post> postCall = mWebService.patchPost(5, post);
+        Call<Post> postCall = mWebService.putPost(5, post);
 
         postCall.enqueue(new Callback<Post>() {
             @Override
